@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import {Provider} from 'react-redux';
 import AllItems from './AllItems';
 import Items from './Items';
 import uniqueId from 'lodash/uniqueId';
-import {connect} from 'redux';
 import './Table.css'
-import Store from './Store';
 
 
 const Data = [
@@ -56,24 +53,15 @@ class Application extends Component {
         const UnPackedItems = term.filter(item => !item.packed);
         const PackedItems = term.filter(item => item.packed);
         return (
-            <Provider store={Store}>
             <div className="main">
                 <AllItems onSubmit={this.Change}/>
-                <Items Data={this.props.Unpacked} title="Unpacked Items" onRemove={this.onRemove} onCheckedOff={this.markAsPacked}/>
-                <Items title="packed Items" Data={this.props.Packed} onRemove={this.onRemove} onCheckedOff={this.markAsPacked}/>
+                <Items Data={UnPackedItems} title="Unpacked Items" onRemove={this.onRemove} onCheckedOff={this.markAsPacked}/>
+                <Items title="packed Items" Data={PackedItems} onRemove={this.onRemove} onCheckedOff={this.markAsPacked}/>
                 <button className="unMark" onClick={this.unMarkall}>unPackedall</button>
                 <button className="Mark" onClick={this.Markall}>packedall</button>
             </div>
-            </Provider>
         );
     }
 }
 
-
-const mapStateToProps = state => ({
-    Unpacked : state.filter(item => !item.packed),
-    Packed: state.filter(item => item.packed)
-})
-
-
-export default connect(mapStateToProps)(Application);
+export default Application;

@@ -1,18 +1,33 @@
 import React, { Component } from 'react';
 import uniqueId from 'lodash/uniqueId';
-import {connect} from 'react-redux'; 
-import SetSearchTerm from './ActionCreators';
 
 
 class AllItems extends Component {
-   
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: ""
+        }
+        this.GetVale = this.GetVale.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    GetVale(event){
+        const value = event.target.value;
+        this.setState({value});
+    }
+    handleSubmit(event){
+        const {onSubmit} = this.props;
+        const {value} = this.state;
+        event.preventDefault();
+        onSubmit({value, id:uniqueId() , packed:true});
+    }
     render() {
-        const {Searching,GetValue,handleSubmit} = this.props; 
+        const {value} = this.state; 
         return (
             <div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={this.handleSubmit}>
                     <label>
-                        <input type="text" value={Searching} onChange={GetValue} />
+                        <input type="text" value={value} onChange={this.GetVale} />
                         <input type="submit" value="submit" />
                     </label>
                 </form>
@@ -21,13 +36,4 @@ class AllItems extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    Searching:state.Searching
-})
-
-const mapDispatchToProps = dispatch => ({
-    GetValue(event){
-        dispatch(SetSearchTerm(event.target.value))
-    }
-})
-export default connect(mapStateToProps,mapDispatchToProps)(AllItems);
+export default AllItems;
